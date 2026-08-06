@@ -43,6 +43,20 @@ Visit:
 - **Form Submissions** — every submission is stored here as a backup, in addition to being
   emailed out.
 
+## CMS login security (Cloudflare Turnstile)
+
+The `/team-portal` login supports Cloudflare Turnstile (a free CAPTCHA alternative) to block
+automated login attempts. It's inactive by default — the login works normally without it — and
+turns on automatically once you add real keys:
+
+1. In the Cloudflare dashboard, go to **Turnstile** → add a site for your domain.
+2. Copy the **Site Key** and **Secret Key** into production `.env`:
+   ```
+   TURNSTILE_SITE_KEY=...
+   TURNSTILE_SECRET_KEY=...
+   ```
+3. `php artisan config:clear` (or redeploy). The widget will appear on the login form from then on.
+
 ## Environment variables
 
 Key settings in `.env`:
