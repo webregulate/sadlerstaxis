@@ -1,0 +1,103 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@font-face {
+    font-family: 'Handel Gothic';
+    src:
+        url('/fonts/handel_gothic.woff') format('woff'),
+        url('/fonts/handel_gothic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-logo: 'Handel Gothic', 'Instrument Sans', ui-sans-serif, sans-serif;
+
+    --color-ink: #0b1220;
+    --color-navy: #101b34;
+    --color-navy-light: #1b2a4d;
+    --color-accent: #f5a623;
+    --color-accent-dark: #d98c00;
+    --color-logo: #ffff00;
+    --color-surface: #ffffff;
+    --color-surface-alt: #f6f7fb;
+    --color-muted: #5b6472;
+    --color-border: #e5e7eb;
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply bg-white text-[color:var(--color-ink)] antialiased;
+    }
+}
+
+@layer components {
+    .btn-accent {
+        @apply inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--color-accent)] px-6 py-3 text-sm font-semibold text-[color:var(--color-ink)] transition-colors duration-150 hover:bg-[color:var(--color-accent-dark)];
+    }
+
+    .btn-outline {
+        @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/40 px-6 py-3 text-sm font-semibold text-white transition-colors duration-150 hover:bg-white/10;
+    }
+
+    .btn-outline-dark {
+        @apply inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--color-ink)]/20 px-6 py-3 text-sm font-semibold text-[color:var(--color-ink)] transition-colors duration-150 hover:bg-[color:var(--color-ink)]/5;
+    }
+
+    .section {
+        @apply mx-auto max-w-6xl px-6 py-16 sm:py-20;
+    }
+
+    .eyebrow {
+        @apply text-sm font-semibold uppercase tracking-widest text-[color:var(--color-accent-dark)];
+    }
+
+    .form-label {
+        @apply mb-1.5 block text-sm font-medium text-[color:var(--color-ink)];
+    }
+
+    .form-input {
+        @apply w-full rounded-lg border border-[color:var(--color-border)] bg-white px-4 py-2.5 text-[15px] text-[color:var(--color-ink)] shadow-sm outline-none transition focus:border-[color:var(--color-accent)] focus:ring-2 focus:ring-[color:var(--color-accent)]/30;
+    }
+
+    .rich-text {
+        @apply space-y-4 text-[17px] leading-relaxed text-[color:var(--color-muted)];
+    }
+
+    .rich-text h2 {
+        @apply text-2xl font-bold text-[color:var(--color-ink)];
+    }
+
+    .rich-text h3 {
+        @apply text-xl font-bold text-[color:var(--color-ink)];
+    }
+
+    .rich-text a {
+        @apply font-medium text-[color:var(--color-accent-dark)] underline underline-offset-2;
+    }
+
+    .rich-text ul {
+        @apply list-disc space-y-2 pl-6;
+    }
+
+    .rich-text ol {
+        @apply list-decimal space-y-2 pl-6;
+    }
+
+    .rich-text strong {
+        @apply text-[color:var(--color-ink)];
+    }
+
+    .rich-text p {
+        @apply mb-4;
+    }
+}
