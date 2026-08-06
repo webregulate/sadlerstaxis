@@ -23,7 +23,24 @@ class FormSubmissionNotification extends Mailable
         $subject = $this->form->renderTemplate($this->form->subject_template, $this->data)
             ?: 'New submission: '.$this->form->name;
 
-        return new Envelope(subject: $subject);
+        return new Envelope(
+            subject: $subject,
+            replyTo: $this->submitterReplyTo(),
+        );
+    }
+
+    /**
+     * Reply-to the email address the visitor entered, so hitting "Reply" in your
+     * inbox goes straight to them instead of the no-reply sending address.
+     */
+    private function submitterReplyTo(): array
+    {
+        $emailField = collect($this->form->fields)
+            ->first(fn (array $field) => ($field['type'] ?? null) === 'email' && ! empty($field['name']));
+
+        $email = $emailField ? ($this->data[$emailField['name']] ?? null) : null;
+
+        return $email ? [$email] : [];
     }
 
     public function content(): Content
