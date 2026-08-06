@@ -2,7 +2,7 @@
 
 A Laravel + Filament rebuild of sadlerstaxis.co.uk. Every page (Home, About, Services, Accounts,
 Careers, Contact, Privacy Policy) and every form (Contact, New Business Account Application,
-Driver Application) is editable from a single admin dashboard at `/admin`.
+Driver Application) is editable from a single admin dashboard at `/team-portal`.
 
 Runs on standard PHP hosting — no Node.js server required in production (Node/npm is only used
 locally to build the CSS once).
@@ -23,11 +23,11 @@ php artisan serve
 ```
 
 The seed command prints your first admin login (email + password) in the terminal — log in at
-`/admin` and change the password afterwards.
+`/team-portal` and change the password afterwards.
 
 Visit:
 - `http://localhost:8000` — the public site
-- `http://localhost:8000/admin` — the CMS
+- `http://localhost:8000/team-portal` — the CMS
 
 ## What's editable in the CMS
 
