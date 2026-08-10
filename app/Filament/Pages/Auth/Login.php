@@ -2,11 +2,11 @@
 
 namespace App\Filament\Pages\Auth;
 
+use App\Support\Turnstile;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\View as FormView;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse;
 use Filament\Pages\Auth\Login as BaseLogin;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
 
 class Login extends BaseLogin
@@ -15,7 +15,7 @@ class Login extends BaseLogin
     {
         $forms = parent::getForms();
 
-        if (config('services.turnstile.site_key')) {
+        if (Turnstile::isEnabled()) {
             $forms['form'] = $forms['form']->schema([
                 ...$forms['form']->getComponents(),
                 Hidden::make('turnstile_token'),
@@ -28,38 +28,16 @@ class Login extends BaseLogin
 
     public function authenticate(): ?LoginResponse
     {
-        $this->verifyTurnstile();
+        if (Turnstile::isEnabled()) {
+            $token = $this->form->getState()['turnstile_token'] ?? null;
+
+            if (! Turnstile::verify($token, request()->ip())) {
+                throw ValidationException::withMessages([
+                    'data.email' => 'Security check failed — please try again.',
+                ]);
+            }
+        }
 
         return parent::authenticate();
-    }
-
-    protected function verifyTurnstile(): void
-    {
-        $secret = config('services.turnstile.secret_key');
-
-        if (! $secret) {
-            // Turnstile isn't configured yet — don't lock out logins over it.
-            return;
-        }
-
-        $token = $this->form->getState()['turnstile_token'] ?? null;
-
-        if (! $token) {
-            throw ValidationException::withMessages([
-                'data.email' => 'Please complete the security check.',
-            ]);
-        }
-
-        $response = Http::asForm()->post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
-            'secret' => $secret,
-            'response' => $token,
-            'remoteip' => request()->ip(),
-        ]);
-
-        if (! $response->json('success')) {
-            throw ValidationException::withMessages([
-                'data.email' => 'Security check failed — please try again.',
-            ]);
-        }
     }
 }

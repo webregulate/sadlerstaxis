@@ -12,4 +12,6 @@ Route::get('/accounts', [PageController::class, 'accounts'])->name('accounts');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::get('/privacy-policy', [PageController::class, 'privacyPolicy'])->name('privacy-policy');
 
-Route::post('/forms/{form}/submit', [FormSubmissionController::class, 'store'])->name('forms.submit');
+Route::post('/forms/{form}/submit', [FormSubmissionController::class, 'store'])
+    ->middleware('throttle:6,1')
+    ->name('forms.submit');

@@ -8,6 +8,16 @@
     <form method="POST" action="{{ route('forms.submit', $form) }}" class="space-y-5">
         @csrf
 
+        {{-- Honeypot: invisible to real visitors, bots that blindly fill every field trip it --}}
+        <div style="position:absolute; left:-9999px;" aria-hidden="true">
+            <label for="hp_website">Leave this field blank</label>
+            <input type="text" name="hp_website" id="hp_website" tabindex="-1" autocomplete="off">
+        </div>
+
+        @error('turnstile')
+            <p class="text-sm font-medium text-red-600">{{ $message }}</p>
+        @enderror
+
         @foreach ($form->fields as $field)
             @php
                 $type = $field['type'] ?? 'text';
@@ -77,8 +87,16 @@
             @endif
         @endforeach
 
+        @if (\App\Support\Turnstile::isEnabled())
+            <div class="cf-turnstile" data-sitekey="{{ config('services.turnstile.site_key') }}"></div>
+        @endif
+
         <button type="submit" class="btn-accent w-full sm:w-auto">
             {{ $form->submit_button_label ?: 'Submit' }}
         </button>
     </form>
+
+    @if (\App\Support\Turnstile::isEnabled())
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    @endif
 @endif
