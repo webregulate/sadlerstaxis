@@ -1,4 +1,8 @@
-<x-layout :title="$page->meta_title ?: 'About Us & History — Sadlers Taxis'" :description="$page->meta_description">
+<x-layout
+    :title="$page->meta_title ?: 'About Us & History — Sadlers Taxis'"
+    :description="$page->meta_description"
+    :image="$page->history_gallery_urls[0]['url'] ?? null"
+>
     <div class="section">
         <p class="eyebrow">About Us</p>
         <h1 class="mt-2 text-3xl font-extrabold text-[color:var(--color-ink)] sm:text-4xl">{{ $page->heading }}</h1>

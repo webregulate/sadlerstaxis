@@ -1,6 +1,7 @@
 <x-layout
     :title="$page->meta_title ?: 'Sadlers Taxis — Taxis in Loughton, Chigwell & the Epping Forest District'"
     :description="$page->meta_description ?: 'Family-run taxi and private hire company covering the Epping Forest District since 1869.'"
+    :image="$page->hero_image_url"
 >
     <section class="relative overflow-hidden bg-[color:var(--color-navy)] text-white">
         <div class="mx-auto grid max-w-6xl gap-12 px-6 py-20 sm:py-28 lg:grid-cols-2 lg:items-center">
