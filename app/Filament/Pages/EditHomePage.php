@@ -2,11 +2,17 @@
 
 namespace App\Filament\Pages;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Textarea;
 use App\Models\HomePage;
 use Filament\Forms;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 
@@ -14,15 +20,15 @@ class EditHomePage extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static ?string $navigationIcon = 'heroicon-o-home';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-home';
 
-    protected static ?string $navigationGroup = 'Pages';
+    protected static string | \UnitEnum | null $navigationGroup = 'Pages';
 
     protected static ?string $navigationLabel = 'Home Page';
 
     protected static ?string $title = 'Home Page';
 
-    protected static string $view = 'filament.pages.edit-home-page';
+    protected string $view = 'filament.pages.edit-home-page';
 
     public ?array $data = [];
 
@@ -31,39 +37,39 @@ class EditHomePage extends Page implements HasForms
         $this->form->fill(HomePage::current()->toArray());
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Section::make('Hero')
+        return $schema
+            ->components([
+                Section::make('Hero')
                     ->schema([
-                        Forms\Components\TextInput::make('hero_heading')->required(),
-                        Forms\Components\TextInput::make('hero_subheading'),
-                        Forms\Components\FileUpload::make('hero_image_path')
+                        TextInput::make('hero_heading')->required(),
+                        TextInput::make('hero_subheading'),
+                        FileUpload::make('hero_image_path')
                             ->label('Hero image')
                             ->image()
                             ->disk('public')
                             ->directory('media'),
                     ]),
-                Forms\Components\Section::make('Welcome text')
+                Section::make('Welcome text')
                     ->schema([
-                        Forms\Components\RichEditor::make('intro_text')->label(''),
+                        RichEditor::make('intro_text')->label(''),
                     ]),
-                Forms\Components\Section::make('Highlight cards')
+                Section::make('Highlight cards')
                     ->schema([
-                        Forms\Components\Repeater::make('highlights')
+                        Repeater::make('highlights')
                             ->schema([
-                                Forms\Components\TextInput::make('title')->required(),
-                                Forms\Components\Textarea::make('description')->rows(2)->required(),
+                                TextInput::make('title')->required(),
+                                Textarea::make('description')->rows(2)->required(),
                             ])
                             ->columns(2)
                             ->addActionLabel('Add highlight')
                             ->defaultItems(0),
                     ]),
-                Forms\Components\Section::make('SEO')
+                Section::make('SEO')
                     ->schema([
-                        Forms\Components\TextInput::make('meta_title'),
-                        Forms\Components\Textarea::make('meta_description')->rows(2),
+                        TextInput::make('meta_title'),
+                        Textarea::make('meta_description')->rows(2),
                     ])->collapsed(),
             ])
             ->statePath('data');

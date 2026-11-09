@@ -3,29 +3,35 @@
 namespace App\Filament\Pages\Auth;
 
 use App\Support\Turnstile;
+use Filament\Auth\Http\Responses\Contracts\LoginResponse;
+use Filament\Auth\Pages\Login as BaseLogin;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\View as FormView;
-use Filament\Http\Responses\Auth\Contracts\LoginResponse;
-use Filament\Pages\Auth\Login as BaseLogin;
+use Filament\Schemas\Components\View;
+use Filament\Schemas\Schema;
+use Filament\Support\Components\Attributes\Exposed;
+use Filament\Support\Components\Attributes\Unexposed;
 use Illuminate\Validation\ValidationException;
 
 class Login extends BaseLogin
 {
-    protected function getForms(): array
+    #[Unexposed]
+    public function form(Schema $schema): Schema
     {
-        $forms = parent::getForms();
+        $components = [
+            $this->getEmailFormComponent(),
+            $this->getPasswordFormComponent(),
+            $this->getRememberFormComponent(),
+        ];
 
         if (Turnstile::isEnabled()) {
-            $forms['form'] = $forms['form']->schema([
-                ...$forms['form']->getComponents(),
-                Hidden::make('turnstile_token'),
-                FormView::make('filament.forms.components.turnstile'),
-            ]);
+            $components[] = Hidden::make('turnstile_token');
+            $components[] = View::make('filament.forms.components.turnstile');
         }
 
-        return $forms;
+        return $schema->components($components);
     }
 
+    #[Exposed]
     public function authenticate(): ?LoginResponse
     {
         if (Turnstile::isEnabled()) {

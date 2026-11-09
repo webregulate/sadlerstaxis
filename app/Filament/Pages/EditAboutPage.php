@@ -2,11 +2,17 @@
 
 namespace App\Filament\Pages;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Textarea;
 use App\Models\AboutPage;
 use Filament\Forms;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 
@@ -14,15 +20,15 @@ class EditAboutPage extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
 
-    protected static ?string $navigationGroup = 'Pages';
+    protected static string | \UnitEnum | null $navigationGroup = 'Pages';
 
     protected static ?string $navigationLabel = 'About Us Page';
 
     protected static ?string $title = 'About Us Page';
 
-    protected static string $view = 'filament.pages.edit-about-page';
+    protected string $view = 'filament.pages.edit-about-page';
 
     public ?array $data = [];
 
@@ -31,43 +37,43 @@ class EditAboutPage extends Page implements HasForms
         $this->form->fill(AboutPage::current()->toArray());
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('heading')->required(),
-                Forms\Components\Section::make('Intro text')
+        return $schema
+            ->components([
+                TextInput::make('heading')->required(),
+                Section::make('Intro text')
                     ->schema([
-                        Forms\Components\RichEditor::make('intro_text')->label(''),
+                        RichEditor::make('intro_text')->label(''),
                     ]),
-                Forms\Components\Section::make('History')
+                Section::make('History')
                     ->schema([
-                        Forms\Components\TextInput::make('history_heading')->label('Heading'),
-                        Forms\Components\RichEditor::make('history_text')->label('Text'),
+                        TextInput::make('history_heading')->label('Heading'),
+                        RichEditor::make('history_text')->label('Text'),
                     ]),
-                Forms\Components\Section::make('History photo gallery')
+                Section::make('History photo gallery')
                     ->description('Historic photos shown alongside the History text.')
                     ->schema([
-                        Forms\Components\Repeater::make('history_gallery')
+                        Repeater::make('history_gallery')
                             ->label('Photos')
                             ->schema([
-                                Forms\Components\FileUpload::make('path')
+                                FileUpload::make('path')
                                     ->label('Photo')
                                     ->image()
                                     ->disk('public')
                                     ->directory('media/about-history')
                                     ->required(),
-                                Forms\Components\TextInput::make('caption')
+                                TextInput::make('caption')
                                     ->label('Caption'),
                             ])
                             ->columns(2)
                             ->addActionLabel('Add photo')
                             ->defaultItems(0),
                     ]),
-                Forms\Components\Section::make('SEO')
+                Section::make('SEO')
                     ->schema([
-                        Forms\Components\TextInput::make('meta_title'),
-                        Forms\Components\Textarea::make('meta_description')->rows(2),
+                        TextInput::make('meta_title'),
+                        Textarea::make('meta_description')->rows(2),
                     ])->collapsed(),
             ])
             ->statePath('data');
